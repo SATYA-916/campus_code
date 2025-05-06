@@ -2,12 +2,12 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Infinite Rotating Wheel on Hover</title>
+  <title>Smooth Return Wheel</title>
   <style>
     body {
       background: #000;
-      min-height: 100vh;
       margin: 0;
+      min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -23,31 +23,43 @@
         yellow 75% 100%
       );
       position: relative;
-      animation: spin 2s linear infinite;
-      animation-play-state: paused;
+      transition: transform 1s ease;
     }
     .wheel::after {
       content: "";
       position: absolute;
       top: 50%;
       left: 50%;
-      width: 220px; 
+      width: 220px;
       height: 220px;
       background: #fff;
       border-radius: 50%;
       transform: translate(-50%, -50%);
     }
-    .wheel:hover {
-      animation-play-state: running;
-    }
-    @keyframes spin {
-      100% {
-        transform: rotate(360deg);
-      }
-    }
   </style>
 </head>
 <body>
-  <div class="wheel"></div>
+  <div class="wheel" id="wheel"></div>
+
+  <script>
+    const wheel = document.getElementById("wheel");
+    let angle = 0;
+    let spinning = null;
+
+    wheel.addEventListener("mouseenter", () => {
+      wheel.style.transition = "none";
+      spinning = setInterval(() => {
+        angle = (angle + 5) % 360;
+        wheel.style.transform = `rotate(${angle}deg)`;
+      }, 16);
+    });
+
+    wheel.addEventListener("mouseleave", () => {
+      clearInterval(spinning);
+      wheel.style.transition = "transform 1s ease";
+      wheel.style.transform = "rotate(0deg)";
+      angle = 0;
+    });
+  </script>
 </body>
 </html>
